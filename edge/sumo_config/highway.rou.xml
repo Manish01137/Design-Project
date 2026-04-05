@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- Vehicle Types -->
+    <vType id="car" accel="3.0" decel="8.0" emergencyDecel="15.0" sigma="0.3" length="5.0" maxSpeed="33.33" minGap="2.5" speedFactor="1.0" color="yellow"/>
+    <vType id="truck" accel="1.5" decel="5.0" emergencyDecel="10.0" sigma="0.2" length="12.0" maxSpeed="22.22" minGap="4.0" speedFactor="0.9" color="red"/>
+    <vType id="suv" accel="2.5" decel="7.0" emergencyDecel="12.0" sigma="0.25" length="4.5" maxSpeed="30.0" minGap="2.0" speedFactor="1.1" color="blue"/>
+
+    <!-- Routes -->
+    <route id="route_main" edges="highway_main"/>
+    <route id="route_return" edges="highway_return"/>
+
+    <!-- Vehicles: leader + followers across lanes -->
+    <vehicle id="leader_0" type="car"    route="route_main"   depart="0"  departLane="0" departSpeed="25.0" color="1,0,0"/>
+    <vehicle id="leader_1" type="truck"  route="route_main"   depart="0"  departLane="1" departSpeed="18.0" color="0.8,0.2,0"/>
+    <vehicle id="leader_2" type="suv"    route="route_main"   depart="0"  departLane="2" departSpeed="28.0" color="0.5,0,0.5"/>
+
+    <vehicle id="follower_0" type="car"  route="route_main"   depart="2"  departLane="0" departSpeed="28.0" color="0,0.8,0"/>
+    <vehicle id="follower_1" type="car"  route="route_main"   depart="2"  departLane="1" departSpeed="22.0" color="0,0.5,0.8"/>
+    <vehicle id="follower_2" type="suv"  route="route_main"   depart="2"  departLane="2" departSpeed="30.0" color="0.8,0.8,0"/>
+
+    <vehicle id="vehicle_3"  type="car"  route="route_main"   depart="5"  departLane="0" departSpeed="20.0"/>
+    <vehicle id="vehicle_4"  type="truck" route="route_main"  depart="8"  departLane="1" departSpeed="15.0"/>
+    <vehicle id="vehicle_5"  type="car"  route="route_main"   depart="10" departLane="2" departSpeed="25.0"/>
+    <vehicle id="vehicle_6"  type="car"  route="route_main"   depart="12" departLane="0" departSpeed="30.0"/>
+    <vehicle id="vehicle_7"  type="suv"  route="route_main"   depart="15" departLane="1" departSpeed="26.0"/>
+    <vehicle id="vehicle_8"  type="car"  route="route_main"   depart="18" departLane="2" departSpeed="22.0"/>
+    <vehicle id="vehicle_9"  type="car"  route="route_main"   depart="20" departLane="0" departSpeed="27.0"/>
+    <vehicle id="vehicle_10" type="truck" route="route_main"  depart="22" departLane="1" departSpeed="16.0"/>
+</routes>

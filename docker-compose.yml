@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+
+  # ── MongoDB ──────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: ca_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: collision_avoidance
+
+  # ── Node.js Backend (Express + Socket.io) ────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ca_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongo:27017/collision_avoidance
+      CLOUD_ML_URL: http://cloud:8000
+      NODE_ENV: production
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # ── Cloud ML (Flask + scikit-learn) ──────────────────────────────────────
+  cloud:
+    build:
+      context: ./cloud
+      dockerfile: Dockerfile
+    container_name: ca_cloud
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/collision_avoidance
+      DB_NAME: collision_avoidance
+      CLOUD_PORT: 8000
+    depends_on:
+      - mongo
+    volumes:
+      - ./cloud/saved_models:/app/saved_models
+
+  # ── Edge Agent (Python + SUMO mock) ──────────────────────────────────────
+  edge:
+    build:
+      context: ./edge
+      dockerfile: Dockerfile
+    container_name: ca_edge
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: http://backend:5000
+      CLOUD_ML_URL: http://cloud:8000
+      SUMO_BIN: sumo
+    depends_on:
+      - backend
+      - cloud
+
+  # ── React Frontend ────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ca_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
